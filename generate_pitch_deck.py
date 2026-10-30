@@ -42,7 +42,7 @@ def create_advanced_pitch_deck():
     
     # Add Smartphone Image to Title Slide
     try:
-        slide1.shapes.add_picture(r"C:\Users\Asus\.gemini\ASTra\brain\c2400b79-0374-4c97-9c61-dd2edaee9084\iqoo_phone_ai_1788684855575.jpg", Inches(0), Inches(0), width=Inches(13.33))
+        slide1.shapes.add_picture(r"C:\Users\Asus\.gemini\CodeShield\brain\c2400b79-0374-4c97-9c61-dd2edaee9084\iqoo_phone_ai_1788684855575.jpg", Inches(0), Inches(0), width=Inches(13.33))
     except Exception as e:
         print("Could not load image 1:", e)
         
@@ -64,7 +64,7 @@ def create_advanced_pitch_deck():
     tf = tx_box.text_frame
     tf.word_wrap = True
     p = tf.add_paragraph()
-    p.text = "ASTra"
+    p.text = "CodeShield"
     p.font.bold = True
     p.font.size = Pt(72)
     p.font.color.rgb = accent_blue
@@ -146,14 +146,14 @@ def create_advanced_pitch_deck():
     s3 = create_standard_slide("The Solution", "Edge-Native Zero-Trust Execution")
     
     try:
-        s3.shapes.add_picture(r"C:\Users\Asus\.gemini\ASTra\brain\c2400b79-0374-4c97-9c61-dd2edaee9084\cyber_firewall_1788684911557.jpg", Inches(0), Inches(2), width=Inches(13.33))
+        s3.shapes.add_picture(r"C:\Users\Asus\.gemini\CodeShield\brain\c2400b79-0374-4c97-9c61-dd2edaee9084\cyber_firewall_1788684911557.jpg", Inches(0), Inches(2), width=Inches(13.33))
     except Exception as e:
         print("Could not load image 2:", e)
         
-    add_card(s3, 1, 2.5, 11, 4.0, "ASTra: The Execution Firewall", 
+    add_card(s3, 1, 2.5, 11, 4.0, "CodeShield: The Execution Firewall", 
              ["• We decoupled the generation from the execution.",
               "• We built a firewall that grades AI intents into 3 Risk Tiers before they ever touch the terminal.",
-              "• Instead of relying on the cloud, ASTra places the security evaluation natively on the iQOO smartphone.",
+              "• Instead of relying on the cloud, CodeShield places the security evaluation natively on the iQOO smartphone.",
               "• This creates absolute privacy, zero-latency, and an unhackable hardware security key."], accent_blue)
 
     # --- Slide 4: Phone-First Architecture ---
@@ -176,7 +176,7 @@ def create_advanced_pitch_deck():
     add_card(s6, 1, 6.0, 11, 1.2, "CI/CD Webhook (FastAPI)", ["Automated server to intercept GitHub Pull Requests."], color_warn)
 
     # --- Slide 7: Conclusion ---
-    s7 = create_standard_slide("Why ASTra Wins", "Protecting the Future of Enterprise AI")
+    s7 = create_standard_slide("Why CodeShield Wins", "Protecting the Future of Enterprise AI")
     add_card(s7, 1.5, 2, 10, 4.5, "Ready for the 30-Hour Battle.", 
              ["✓ 100% Offline & Private (Protects enterprise IP)", 
               "✓ Deep utilization of Snapdragon NPU & Office Kit",
@@ -184,8 +184,8 @@ def create_advanced_pitch_deck():
               "",
               "Thank you."], accent_blue)
 
-    prs.save('ASTra_Hackathon_Pitch_V3.pptx')
-    print("Successfully generated ASTra_Hackathon_Pitch_V3.pptx")
+    prs.save('CodeShield_Hackathon_Pitch_V3.pptx')
+    print("Successfully generated CodeShield_Hackathon_Pitch_V3.pptx")
 
 if __name__ == '__main__':
     create_advanced_pitch_deck()

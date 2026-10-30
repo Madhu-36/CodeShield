@@ -1,2 +1,0 @@
-[console_scripts]
-ASTra-dev = cli:app

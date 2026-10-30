@@ -7,7 +7,7 @@ def main():
     Demonstrates a simulated CI/webhook flow where a PR introduces a change.
     Instead of passing the entire file to the model, we use AST slicing.
     """
-    print("=== ASTra Dev: End-to-End Diff Review Example ===")
+    print("=== CodeShield Dev: End-to-End Diff Review Example ===")
     
     # 1. Simulate a target file
     sample_file = "sample_target.py"

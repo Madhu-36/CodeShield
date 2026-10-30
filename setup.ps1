@@ -1,4 +1,4 @@
-Write-Host "🚀 Setting up ASTra Project for Windows..." -ForegroundColor Green
+Write-Host "🚀 Setting up CodeShield Project for Windows..." -ForegroundColor Green
 
 # Create Virtual Environment if it doesn't exist
 if (-not (Test-Path "venv")) {
@@ -20,6 +20,6 @@ if (-not (Test-Path ".env")) {
 }
 
 Write-Host "✅ Setup Complete!" -ForegroundColor Green
-Write-Host "To start using ASTra, run:" -ForegroundColor Cyan
+Write-Host "To start using CodeShield, run:" -ForegroundColor Cyan
 Write-Host ".\venv\Scripts\Activate.ps1"
 Write-Host "python cli.py --help"

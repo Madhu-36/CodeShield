@@ -5,7 +5,7 @@ from src.policy.classifier import PolicyGate, RiskTier
 from src.sandbox.executor import SandboxExecutor
 from src.engine.explainer import EvidenceEngine
 
-app = typer.Typer(help="ASTra Dev: Security-First, Repository-Local Action Layer")
+app = typer.Typer(help="CodeShield Dev: Security-First, Repository-Local Action Layer")
 console = Console()
 
 @app.command()

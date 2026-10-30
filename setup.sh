@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🚀 Setting up ASTra Project for Linux/Mac..."
+echo "🚀 Setting up CodeShield Project for Linux/Mac..."
 
 # Create Virtual Environment if it doesn't exist
 if [ ! -d "venv" ]; then
@@ -21,6 +21,6 @@ else
 fi
 
 echo "✅ Setup Complete!"
-echo "To start using ASTra, run:"
+echo "To start using CodeShield, run:"
 echo "source venv/bin/activate"
 echo "python cli.py --help"

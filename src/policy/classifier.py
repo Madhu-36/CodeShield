@@ -88,10 +88,12 @@ class PolicyGate:
             
     @classmethod
     def _heuristic_classify(cls, proposed_command: str, prefix: str = "") -> IntentAction:
+        import re
         command_lower = proposed_command.lower()
         
         for keyword in cls.DESTRUCTIVE_KEYWORDS:
-            if keyword in command_lower:
+            # Use word boundaries to avoid matching "rm" inside "Normal"
+            if re.search(rf'\b{keyword}\b', command_lower):
                 return IntentAction(
                     action=proposed_command,
                     target="system",
@@ -100,7 +102,7 @@ class PolicyGate:
                 )
                 
         for keyword in cls.WRITE_KEYWORDS:
-            if keyword in command_lower:
+            if re.search(rf'\b{keyword}\b', command_lower):
                 return IntentAction(
                     action=proposed_command,
                     target="system",
