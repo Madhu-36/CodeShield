@@ -6,3 +6,5 @@ __pycache__/
 
 demo without audio.mp4
 *.egg-info/
+.codeshield_trash/
+.codeshield_ledger.jsonl

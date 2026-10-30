@@ -1,0 +1,43 @@
+{
+  "name": "codeshield-security",
+  "displayName": "CodeShield // Edge-Native AI Security Firewall",
+  "description": "Zero-Trust execution firewall for AI coding agents powered by iQOO Office Kit & Snapdragon NPU",
+  "version": "2.0.0",
+  "publisher": "root-coders",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Security",
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeshield.dashboard",
+        "title": "CodeShield: Open Live Security Dashboard"
+      },
+      {
+        "command": "codeshield.audit",
+        "title": "CodeShield: Inspect Merkle Audit Ledger"
+      },
+      {
+        "command": "codeshield.heal",
+        "title": "CodeShield: Autonomous Command Self-Healing"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "codeshield.heal",
+          "group": "navigation"
+        }
+      ]
+    }
+  }
+}
