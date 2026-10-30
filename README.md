@@ -1,9 +1,10 @@
 # 🛡️ CodeShield: Edge-Native AI Security Firewall
 
-![CodeShield Banner](https://img.shields.io/badge/iQOO-Hackathon_2026-blue?style=for-the-badge)
+[![CodeShield CI Pipeline](https://github.com/Madhu-36/CodeShield/actions/workflows/ci.yml/badge.svg)](https://github.com/Madhu-36/CodeShield/actions)
 ![Track](https://img.shields.io/badge/Track-Developer_Tools-orange?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-3.10+-yellow?style=for-the-badge)
-![Security](https://img.shields.io/badge/Policy-Zero--Trust-green?style=for-the-badge)
+![Protocol](https://img.shields.io/badge/Protocol-Model_Context_Protocol_(MCP)-blueviolet?style=for-the-badge)
+![Security](https://img.shields.io/badge/Policy-Zero--Trust_Hardware_Key-green?style=for-the-badge)
+![Acceleration](https://img.shields.io/badge/NPU-Qualcomm_Snapdragon_8_Gen_3-red?style=for-the-badge)
 
 **Built by Team: Root Coders | Lead Developer: Madhu S**  
 *Target Track: Track 06 - Developer Tools / Autonomous Coding Safety*
@@ -11,7 +12,7 @@
 ---
 
 ## 📌 Executive Summary
-**CodeShield** is an edge-native execution firewall that protects developers from dangerous, hallucinated, or malicious AI-generated commands. 
+**CodeShield** is an edge-native execution firewall that protects developers from dangerous, hallucinated, or destructive AI-generated commands.
 
 By turning the **iQOO smartphone** into an air-gapped **Hardware Security Key**, CodeShield intercepts, grades, and sandboxes autonomous terminal actions using local quantized models running on the **Snapdragon NPU via the iQOO Office Kit**.
 
@@ -39,35 +40,61 @@ CodeShield strictly **decouples generation from execution**:
 
 ## ⚙️ Core Technical Capabilities
 
+* **🔌 Native Model Context Protocol (MCP) Server:** Standard JSON-RPC stdio bridge for Cursor, Claude Code, Windsurf, Zed, and Claude Desktop.
+* **🌐 Cyberpunk Web Security Console:** Real-time visual control center at `http://127.0.0.1:8000/console` with interactive command sandbox and threat radar.
+* **🔍 Differential Git AST Analyzer:** Tree-Sitter blast radius analysis identifying exact affected functions and calculating branch risk scores.
 * **🌳 Tree-Sitter AST Slicing:** Extracts exact target class and method syntax trees, reducing agent token consumption by **85.1%**.
 * **⚡ On-Device Snapdragon NPU Acceleration:** Instant policy verification (**<20ms**) on the Qualcomm Hexagon DSP without incurring cloud API costs.
 * **📦 Dual-Engine Sandbox:** Primary Docker micro-container isolation with automatic graceful fallback to an isolated local process jail.
 * **🔍 Local Air-Gapped RAG (ChromaDB):** Embedded repository vector index for semantic context search with zero data leakage.
 * **🪝 Zero-Trust Git Hooks:** Repository pre-commit guards that block destructive scripts before commits can be finalized.
-* **📊 Live Telemetry Dashboard:** Real-time terminal HUD showing phone status, live threat interception, and ROI metrics.
 
 ---
 
 ## 🚀 CLI Usage & Quick Start
 
-### 1. Launch the Live Telemetry Dashboard
+### 1. Launch the Cyberpunk Web Security Console
+```bash
+python cli.py console-ui
+# Launches interactive cockpit in browser at http://127.0.0.1:8000/console
+```
+
+### 2. Launch the Terminal Telemetry Dashboard
 ```bash
 python cli.py dashboard
 # Or view real-time streaming interception:
 python cli.py dashboard --stream
 ```
 
-### 2. Inspect iQOO Smartphone & Snapdragon NPU Bridge
+### 3. Run Differential Git AST Risk Audit
 ```bash
-python cli.py bridge
+python cli.py diff
+# Or compare against a specific branch:
+python cli.py diff --base main
 ```
 
-### 3. Run Performance & Token Savings Benchmark
+### 4. Run Model Context Protocol (MCP) Server
+```bash
+python cli.py mcp
+```
+To configure in Cursor or Claude Desktop (`claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "codeshield": {
+      "command": "python",
+      "args": ["C:/Users/Asus/OneDrive/Desktop/PROJECTS/CodeShield/cli.py", "mcp"]
+    }
+  }
+}
+```
+
+### 5. Run Performance & Token Savings Benchmark
 ```bash
 python cli.py benchmark
 ```
 
-### 4. Evaluate and Execute Commands Through the Policy Gate
+### 6. Evaluate and Execute Commands Through the Policy Gate
 ```bash
 # Safe Command (Tier 1)
 python cli.py execute "echo 'System Status Normal'"
@@ -79,12 +106,12 @@ python cli.py execute "pytest tests/"
 python cli.py execute "rm -rf .git"
 ```
 
-### 5. Method-Level AST Context Extraction
+### 7. Method-Level AST Context Extraction
 ```bash
 python cli.py review sample_target.py 4
 ```
 
-### 6. Install Repository Git Pre-Commit Security Guards
+### 8. Install Repository Git Pre-Commit Security Guards
 ```bash
 python cli.py install-hooks
 ```
@@ -106,4 +133,4 @@ python cli.py install-hooks
 * **Phone-First Engineering:** Smartphone is not just a screen; it is the physical biometric and cryptographic security authority.
 * **Snapdragon NPU Optimization:** Hexagon DSP acceleration handles deterministic policy checking and quantized inference.
 * **iQOO Office Kit Bridge:** Connects laptop productivity directly with mobile security.
-* **Enterprise Feasibility:** Out-of-the-box compatibility with existing developer workflows (Git, VS Code, CI/CD).
+* **Enterprise Feasibility:** Out-of-the-box compatibility with existing developer workflows (Git, VS Code, Cursor, CI/CD).

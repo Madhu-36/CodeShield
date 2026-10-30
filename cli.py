@@ -1,7 +1,9 @@
 import sys
+import webbrowser
 import typer
 from rich.console import Console
 from src.slicer.ast_parser import CodeSlicer
+from src.slicer.diff_analyzer import GitDiffASTAnalyzer
 from src.policy.classifier import PolicyGate, RiskTier
 from src.sandbox.executor import SandboxExecutor
 from src.engine.explainer import EvidenceEngine
@@ -9,6 +11,7 @@ from src.bridge.phone_bridge import IQOOPhoneBridge
 from src.ui.dashboard import CodeShieldDashboard
 from src.benchmark.runner import BenchmarkRunner
 from src.hooks.manager import HookManager
+from src.mcp.server import CodeShieldMCPServer
 
 # Safe terminal encoding on Windows
 if hasattr(sys.stdout, 'reconfigure'):
@@ -51,7 +54,7 @@ def execute(command: str, force: bool = typer.Option(False, "--force", "-f", hel
 @app.command()
 def review(file_path: str, line_number: int):
     """
-    Performs a method-level review of a specific file and line.
+    Performs a method-level review of a specific file and line using Tree-Sitter AST slicing.
     """
     console.print(f"[bold blue]Extracting method slice for {file_path}:{line_number}[/bold blue]")
     
@@ -71,15 +74,11 @@ def review(file_path: str, line_number: int):
         console.print("[yellow]Could not determine method slice for given line.[/yellow]")
 
 @app.command()
-def index(directory: str = "."):
+def diff(base: str = typer.Option("HEAD~1", "--base", "-b", help="Git reference to compare against (e.g. main, HEAD~1)")):
     """
-    Indexes the specified directory into the local RAG database.
+    Performs differential AST risk analysis across modified branch files.
     """
-    from src.retrieval.rag_index import LocalRepositoryRAG
-    console.print(f"[bold blue]Indexing directory:[/bold blue] {directory}")
-    rag = LocalRepositoryRAG()
-    count = rag.index_directory(directory)
-    console.print(f"[bold green]Successfully indexed {count} method/class slices into ChromaDB.[/bold green]")
+    GitDiffASTAnalyzer.render_cli_report(base)
 
 @app.command()
 def dashboard(stream: bool = typer.Option(False, "--stream", "-s", help="Run animated live intercept feed")):
@@ -113,6 +112,14 @@ def bridge():
     console.print(f"[bold cyan]    Biometric Key:[/bold cyan] {dev.biometric_hardware_key}")
 
 @app.command()
+def mcp():
+    """
+    Starts the native Model Context Protocol (MCP) server over stdio for Cursor, Claude Code, and Windsurf.
+    """
+    server = CodeShieldMCPServer()
+    server.run_stdio()
+
+@app.command()
 def install_hooks(repo: str = typer.Option(".", "--repo", "-r", help="Path to git repository")):
     """
     Installs CodeShield Zero-Trust Pre-Commit Git Hooks.
@@ -124,12 +131,36 @@ def install_hooks(repo: str = typer.Option(".", "--repo", "-r", help="Path to gi
         console.print(f"[bold red][-] {msg}[/bold red]")
 
 @app.command()
-def serve(host: str = "127.0.0.1", port: int = 8000):
+def index(directory: str = "."):
     """
-    Starts the GitHub Webhook CI/CD server.
+    Indexes the specified directory into the local RAG database.
+    """
+    from src.retrieval.rag_index import LocalRepositoryRAG
+    console.print(f"[bold blue]Indexing directory:[/bold blue] {directory}")
+    rag = LocalRepositoryRAG()
+    count = rag.index_directory(directory)
+    console.print(f"[bold green]Successfully indexed {count} method/class slices into ChromaDB.[/bold green]")
+
+@app.command()
+def console_ui(host: str = "127.0.0.1", port: int = 8000, open_browser: bool = typer.Option(True, "--open/--no-open", help="Open browser automatically")):
+    """
+    Launches the Cyberpunk Web Security Console in the browser.
     """
     import uvicorn
-    console.print(f"[bold green]Starting Webhook Server on {host}:{port}...[/bold green]")
+    url = f"http://{host}:{port}/console"
+    console.print(f"[bold cyan][+] Launching CodeShield Web Security Console at:[/bold cyan] {url}")
+    if open_browser:
+        webbrowser.open(url)
+    uvicorn.run("src.server.webhook:app", host=host, port=port, reload=False)
+
+@app.command()
+def serve(host: str = "127.0.0.1", port: int = 8000):
+    """
+    Starts the CodeShield Gateway Webhook & Web Console Server.
+    """
+    import uvicorn
+    console.print(f"[bold green][+] Starting CodeShield Webhook Server on {host}:{port}...[/bold green]")
+    console.print(f"[bold cyan][+] Web Security Console available at: http://{host}:{port}/console[/bold cyan]")
     uvicorn.run("src.server.webhook:app", host=host, port=port, reload=True)
 
 if __name__ == "__main__":
