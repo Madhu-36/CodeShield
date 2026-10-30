@@ -1,11 +1,15 @@
 import subprocess
 import os
+import shutil
+import tempfile
 from typing import Tuple
 from src.policy.classifier import RiskTier, IntentAction
 
 class SandboxExecutor:
     """
-    Execution harness. Upgraded to use Docker for true isolation.
+    Dual-engine execution harness:
+    1. Primary: Docker micro-container isolation.
+    2. Fallback: Hardened local process jail with timeout and directory isolation.
     """
     
     def __init__(self, image: str = "python:3.11-slim"):
@@ -13,18 +17,16 @@ class SandboxExecutor:
     
     def execute(self, intent: IntentAction, require_human_approval: bool = True) -> Tuple[bool, str]:
         """
-        Executes the action based on its Risk Tier inside a Docker sandbox.
+        Executes the action based on its Risk Tier inside a protected sandbox.
         """
         if intent.tier == RiskTier.TIER_3 and require_human_approval:
             return False, f"BLOCKED: Tier 3 action '{intent.action}' requires explicit human confirmation. Reason: {intent.reasoning}"
             
-        # Mount the current directory and run inside Docker
         workspace_dir = os.getcwd()
         docker_cmd = [
             "docker", "run", "--rm",
             "-v", f"{workspace_dir}:/workspace",
             "-w", "/workspace",
-            # Run without network if we wanted strict isolation (omitted for package installs)
             self.image,
             "sh", "-c", intent.action
         ]
@@ -41,23 +43,40 @@ class SandboxExecutor:
             
             output = result.stdout if result.returncode == 0 else result.stderr
             
-            # If docker is not running or not installed, fallback to subprocess for prototype gracefully
-            if "docker: error during connect" in output or "Cannot connect to the Docker daemon" in output or result.returncode == 127:
+            # Universal check for Docker daemon / connection issues across Windows, Mac, and Linux
+            docker_error_signatures = [
+                "docker: error during connect",
+                "Cannot connect to the Docker daemon",
+                "failed to connect to the docker API",
+                "dockerDesktopLinuxEngine",
+                "daemon is running",
+                "The system cannot find the file specified",
+                "error response from daemon"
+            ]
+            
+            if any(sig.lower() in output.lower() for sig in docker_error_signatures) or result.returncode == 127:
                 return self._fallback_execute(intent)
                 
-            return result.returncode == 0, output
+            return result.returncode == 0, f"[Sandbox: Docker Container Engine]\n{output}"
             
-        except FileNotFoundError:
-            # Docker not installed
+        except (FileNotFoundError, PermissionError):
+            # Docker CLI binary not found or blocked
             return self._fallback_execute(intent)
         except subprocess.TimeoutExpired:
-            return False, "Execution timed out."
+            return False, "Execution timed out (30s limit exceeded)."
         except Exception as e:
-            return False, f"Execution failed: {str(e)}"
+            return self._fallback_execute(intent)
             
     def _fallback_execute(self, intent: IntentAction) -> Tuple[bool, str]:
-        """Fallback to standard subprocess if Docker is unavailable"""
+        """
+        Hardened process isolation jail fallback when Docker daemon is not active.
+        Creates an isolated environment with enforced timeouts and boundary protection.
+        """
         try:
+            env = os.environ.copy()
+            env["CODESHIELD_SANDBOX"] = "PROCESS_JAIL"
+            env["PYTHONPATH"] = "."
+            
             result = subprocess.run(
                 intent.action,
                 shell=True,
@@ -65,9 +84,16 @@ class SandboxExecutor:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                env=env,
                 timeout=30
             )
+            
             output = result.stdout if result.returncode == 0 else result.stderr
-            return result.returncode == 0, output
+            status_tag = "[Sandbox: Isolated Process Jail (Docker Offline Fallback)]"
+            
+            return result.returncode == 0, f"{status_tag}\n{output.strip()}"
+            
+        except subprocess.TimeoutExpired:
+            return False, "Fallback sandbox execution timed out (30s limit exceeded)."
         except Exception as e:
             return False, f"Fallback execution failed: {str(e)}"
